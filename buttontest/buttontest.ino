@@ -84,14 +84,23 @@ void crashOkay() {
 
 void crashNotOkay() {
   display.clearScreen();
-  //set the font, color and cursor and print message
-  display.setFont(thinPixel7_10ptFontInfo);
-  display.fontColor(TS_8b_White,TS_8b_Black);
-  display.setCursor(0, 0);
-  display.println("Alright,");
-  display.setFont(liberationSansNarrow_12ptFontInfo);
-  display.setCursor(16, 16);
-  display.println("I'm calling");
-  display.setCursor(20, 34);
-  display.println("for help.");
+  //start timer loop for 15 seconds
+  unsigned long startTime = millis(); 
+  while (millis() - startTime < 15000) {
+    display.drawRect(0,0,96,64, TSRectangleFilled, TS_8b_Red);
+    delay(100);
+    display.clearScreen();
+    //set the font, color and cursor and print message
+    display.setFont(thinPixel7_10ptFontInfo);
+    display.fontColor(TS_8b_White,TS_8b_Black);
+    display.setCursor(0, 0);
+    display.println("Alright,");
+    display.setFont(liberationSansNarrow_12ptFontInfo);
+    display.setCursor(16, 16);
+    display.println("I'm calling");
+    display.setCursor(20, 34);
+    display.println("for help.");
+    delay(100);
+  }
+  
 }
