@@ -18,6 +18,11 @@
 #include <TinyScreen.h>
 #include <STBLE.h>
 #include "BLEtypes.h"
+#include "BMA250.h"       // For interfacing with the accel. sensor
+
+// Accelerometer sensor variables for the sensor and its values
+BMA250 accel_sensor;
+double temp;
 
 #define BLE_DEBUG true
 #define menu_debug_print true
@@ -152,10 +157,14 @@ void setup(void)
   digitalWrite(vibratePin, vibratePinInactive);
   initHomeScreen();
   requestScreenOn();
+  
   delay(100);
   BLEsetup(&phoneConnection, "TinyWatch", BLEConnect, BLEDisconnect);
   useSecurity(BLEBond);
   advertise("TinyWatch", "7905F431-B5CE-4E99-A40F-4B1E122D00D0");
+
+    // Set up the BMA250 acccelerometer sensor
+  accel_sensor.begin(BMA250_range_2g, BMA250_update_time_64ms);
 
 #if defined(ARDUINO_ARCH_SAMD)
   //attachInterrupt(TSP_PIN_BT1, wakeHandler, FALLING);

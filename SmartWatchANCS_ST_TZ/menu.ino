@@ -168,14 +168,59 @@ uint8_t editInt(uint8_t button, int *inVal, char *intName, void (*cb)()) {
   return 0;
 }
 
+void showTemp () {
+  double temp;
+
+  display.clearWindow(0, 12, 96, 64);
+
+  while (1) {
+    accel_sensor.read();//This function gets new data from the acccelerometer
+    temp = ((accel_sensor.rawTemp * 0.5) + 24.0); // Temperature Reading
+
+    display.setFont(font10pt);
+    display.fontColor(defaultFontColor, defaultFontBG);
+
+    display.setCursor(0, menuTextY[0]);
+    display.print(F("< back"));
+
+    display.setCursor(15, menuTextY[1]);
+    display.print(F("Current Temp"));
+
+    display.setCursor(30, menuTextY[2]);
+    display.print(temp);
+
+    // Message Prompt Condition
+    if (temp > 35) {
+      display.setCursor(15, menuTextY[3]);
+      display.print("Please Hydrate!");
+    }
+
+    else {
+      display.setCursor(15, menuTextY[3]);
+      display.print("               ");
+    }
+
+    delay(100);
+
+    // While Loop Exit Condition
+    if (display.getButtons(TSButtonUpperLeft)) {
+      break;
+    }
+  }
+  currentDisplayState = displayStateHome;
+  initHomeScreen();
+}
+
+
+
 void mainMenu(uint8_t selection) {
   if (menu_debug_print)SerialMonitorInterface.println("mainMenuHandler");
   if (selection == 0) { // Cycling Mode
-    newMenu(dateTimeMenuIndex); // <--- Insert your function here Cycling Mode
+    //crashTest(); // <--- Insert your function here Cycling Mode
   }
-  
+
   if (selection == 1) { // Temperature Monitoring
-    newMenu(dateTimeMenuIndex); // <--- Insert your function here Temperature Monitoring
+    showTemp(); // <--- Insert your function here Temperature Monitoring
   }
 
   if (selection == 2) {
