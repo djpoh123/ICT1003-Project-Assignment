@@ -1,3 +1,2 @@
 # ICT1003-Project-Assignment
-
-I love pie.
+This is the android version tested to be ok. logic may still need to change a little. Overall ok 
