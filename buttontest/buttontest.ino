@@ -7,6 +7,7 @@ TinyScreen display = TinyScreen(TinyScreenDefault);
 void setup() {
   Wire.begin();
   display.begin();
+  display.setFlip(true);
   delay(100);
 }
 
