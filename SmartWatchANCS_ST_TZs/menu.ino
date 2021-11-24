@@ -7,6 +7,7 @@ typedef struct
   void (*selectionHandler)(uint8_t);
 } menu_info;
 
+
 uint8_t menuHistory[5];
 uint8_t menuHistoryIndex = 0;
 uint8_t currentMenu = 0;
@@ -14,6 +15,7 @@ uint8_t currentMenuLine = 0;
 uint8_t lastMenuLine = -1;
 uint8_t currentSelectionLine = 0;
 uint8_t lastSelectionLine = -1;
+
 
 void newMenu(int8_t newIndex) {
   currentMenuLine = 0;
@@ -214,11 +216,6 @@ void showTemp () {
 void mainMenu(uint8_t selection) {
   if (menu_debug_print)SerialMonitorInterface.println("mainMenuHandler");
   if (selection == 0) { // Cycling Mode
-<<<<<<< Updated upstream
-    //crashTest(); // <--- Insert your function here Cycling Mode
-  }
-
-=======
     // the intention is set an ok sign
     if (cyclingModeState == 0) {
       cyclingModeState = 1;
@@ -231,7 +228,7 @@ void mainMenu(uint8_t selection) {
     menuHistoryIndex--;
     currentMenu = menuHistory[menuHistoryIndex];
   }
->>>>>>> Stashed changes
+
   if (selection == 1) { // Temperature Monitoring
     showTemp(); // <--- Insert your function here Temperature Monitoring
   }
@@ -297,6 +294,7 @@ void viewMenu(uint8_t button) {
   } else {
     if (button == upButton) {
       if (currentSelectionLine > 0) {
+        currentSelectionLine--;
       } else if (currentMenuLine > 0) {
         currentMenuLine--;
       }
@@ -342,6 +340,7 @@ void viewMenu(uint8_t button) {
           display.print("Off");
         }
       }
+
       for (uint8_t i = 0; i < 25; i++)display.write(' ');
       if (i == 0) {
         display.fontColor(defaultFontColor, inactiveFontBG);
