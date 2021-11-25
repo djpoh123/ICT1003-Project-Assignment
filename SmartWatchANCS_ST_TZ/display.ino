@@ -101,47 +101,39 @@ void viewNotifications(uint8_t button) {
 }
 
 void crashUI() {
+  display.clearWindow(0, 12, 96, 64);
   //start timer loop for 15 seconds
   int i = 15;
   //width from the right for '10'
   int j = 6;
   unsigned long startTime = millis();  
   while (millis() - startTime < 15000) {
-    unsigned long secondTime = millis();
-    // count per second
-    while (millis() - secondTime < 1000) { 
-      // set the font, color and cursor and print question, buttons, time      
-      display.setFont(liberationSansNarrow_12ptFontInfo);
-      display.fontColor(TS_8b_White,TS_8b_Black);
-      display.setCursor(0, 16);
-      display.println("Are you okay?");
+    // set the font, color and cursor and print question, buttons, time      
+    display.setFont(liberationSansNarrow_12ptFontInfo);
+    display.fontColor(TS_8b_White,TS_8b_Black);
+    display.setCursor(0, 16);
+    display.println("Are you okay?");
       
-      display.setFont(thinPixel7_10ptFontInfo);
-      display.fontColor(TS_8b_Green,TS_8b_Black);
-      display.setCursor(0, 48);
-      display.println("Okay");
-      display.fontColor(TS_8b_Red,TS_8b_Black);
-      display.setCursor(72, 48);
-      display.println("Nope");
+    display.setFont(thinPixel7_10ptFontInfo);
+    display.fontColor(TS_8b_Green,TS_8b_Black);
+    display.setCursor(0, 48);
+    display.println("Okay");
+    display.fontColor(TS_8b_Red,TS_8b_Black);
+    display.setCursor(72, 48);
+    display.println("Nope");
 
-      display.setFont(liberationSansNarrow_12ptFontInfo);
-      display.fontColor(TS_8b_White,TS_8b_Black);
+    display.setFont(liberationSansNarrow_12ptFontInfo);
+    display.fontColor(TS_8b_White,TS_8b_Black);
     
-      //set cursor to be based from the right and print width of i
-      display.setCursor(48-j, 32);    
-      //print timer
-      display.println(i);
+    //set cursor to be based from the right and print width of i
+    display.setCursor(48-j, 32);    
+    //print timer
+    display.println(i);
 
-      // flash
-      delay(100);
-      display.drawRect(0,12,96,64, TSRectangleFilled, TS_8b_Red);
-      delay(100);
-      display.clearWindow(0, 12, 96, 64);
-    }
-
+    delay(1000);
     // one second later or interrupt: break, or clear and decrement
-    if (display.getButtons(TSButtonLowerRight)) { break; }
-    else if (display.getButtons(TSButtonLowerLeft)) {
+    if (display.getButtons(TSButtonLowerLeft)) { break; }
+    else if (display.getButtons(TSButtonLowerRight)) {
       i = 0;
       break;
     }
@@ -178,16 +170,27 @@ void crashOkay() {
 }
 
 void crashNotOkay() {
-  display.clearWindow(0, 12, 96, 64);
-  //set the font, color and cursor and print message
-  display.setFont(thinPixel7_10ptFontInfo);
-  display.fontColor(TS_8b_White,TS_8b_Black);
-  display.setFont(liberationSansNarrow_12ptFontInfo);
-  display.setCursor(16, 16);
-  display.println("I'm calling");
-  display.setCursor(20, 34);
-  display.println("for help.");
-  delay(7000);
+  while (1) {
+    // flash
+    display.clearWindow(0, 12, 96, 64);
+    display.drawRect(0,12,96,64, TSRectangleFilled, TS_8b_Red);
+    delay(100);
+    display.clearWindow(0, 12, 96, 64);
+
+    //set the font, color and cursor and print message
+    display.setFont(thinPixel7_10ptFontInfo);
+    display.fontColor(TS_8b_White,TS_8b_Black);
+    display.setFont(liberationSansNarrow_12ptFontInfo);
+    display.setCursor(16, 16);
+    display.println("I'm calling");
+    display.setCursor(20, 34);
+    display.println("for help."); 
+    delay(100); 
+
+    // break upon pressing okay
+    if (display.getButtons(TSButtonLowerLeft)) { break; }              
+    
+  }
   display.clearWindow(0, 12, 96, 64);
   currentDisplayState = displayStateHome;
   initHomeScreen();
