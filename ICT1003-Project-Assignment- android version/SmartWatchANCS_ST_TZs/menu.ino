@@ -54,6 +54,7 @@ uint8_t lastMenuLine = -1;
 uint8_t currentSelectionLine = 0;
 uint8_t lastSelectionLine = -1;
 uint8_t cyclingModeState = 0;
+uint8_t crash = 0;
 
 void newMenu(int8_t newIndex) {
   currentMenuLine = 0;
@@ -275,51 +276,59 @@ void crashDetector(){///////////////////////////////////////////////////////////
       }
     }
     else{
-     
+     i = 0;
     }
 }
 
-void crashUI() { 
-  //set the font, color and cursor and print question 
-  display.setFont(liberationSansNarrow_12ptFontInfo); 
-  display.fontColor(TS_8b_White,TS_8b_Black); 
-  display.setCursor(0, 16); 
-  display.println("Are you okay?"); 
- 
-  //set the font, color remains the same for timer 
-  display.setFont(liberationSansNarrow_12ptFontInfo); 
- 
-  //start timer loop for 10 seconds 
-  int i = 10; 
-  //width from the right for '10' 
-  int j = 6; 
-  unsigned long startTime = millis();   
-  while (millis() - startTime < 10000) {   
-    //set cursor to be based from the right and print width of i 
-    display.setCursor(48-j, 32);     
-    //print timer 
-    display.println(i); 
- 
-    // one second later or interrupt: break, or clear and decrement 
-    delay(1000); 
-    if (display.getButtons(TSButtonLowerRight)) { 
+void crashUI() {
+  display.clearWindow(0, 12, 96, 64);
+  //start timer loop for 15 seconds
+  int i = 15;
+  //width from the right for '10'
+  int j = 6;
+  unsigned long startTime = millis();  
+  while (millis() - startTime < 15000) {
+    // set the font, color and cursor and print question, buttons, time      
+    display.setFont(liberationSansNarrow_12ptFontInfo);
+    display.fontColor(TS_8b_White,TS_8b_Black);
+    display.setCursor(0, 16);
+    display.println("Are you okay?");
+      
+    display.setFont(thinPixel7_10ptFontInfo);
+    display.fontColor(TS_8b_Green,TS_8b_Black);
+    display.setCursor(0, 48);
+    display.println("Okay");
+    display.fontColor(TS_8b_Red,TS_8b_Black);
+    display.setCursor(72, 48);
+    display.println("Help");
+
+    display.setFont(liberationSansNarrow_12ptFontInfo);
+    display.fontColor(TS_8b_White,TS_8b_Black);
+    
+    //set cursor to be based from the right and print width of i
+    display.setCursor(48-j, 32);    
+    //print timer
+    display.println(i);
+
+    delay(1000);
+    // one second later or interrupt: break, or clear and decrement
+    if (display.getButtons(TSButtonLowerLeft)) { break; }
+    else if (display.getButtons(TSButtonLowerRight)) {
+      i = 0;
       break;
-      cyclingModeState=0;
+    }
+    else {
+      display.clearWindow(48-j, 32, 12, 12);
+      i -= 1;
+      if (i < 10) {
+      j = 0;
       }
-    else if(display.getButtons(TSButtonLowerLeft)){
-      i=0;
-      break;
-      } 
-    else { 
-      display.clearWindow(48-j, 32, 12, 12); 
-      i -= 1; 
-      j = 0; 
-    } 
-  } 
-  //timer run out or interrupt 
-  if (i == 0) { crashNotOkay();} 
-  else { crashOkay();} 
-} 
+    }
+  }
+  //timer run out or interrupt
+  if (i == 0) { crashNotOkay(); }
+  else { crashOkay();}
+}
  
 void crashOkay() { 
   display.clearScreen(); 
@@ -345,21 +354,40 @@ void crashOkay() {
  
 void crashNotOkay() { 
   display.clearScreen(); 
-  //set the font, color and cursor and print message 
-  display.setFont(thinPixel7_10ptFontInfo); 
-  display.fontColor(TS_8b_White,TS_8b_Black); 
-  display.setCursor(0, 0); 
-  display.println("Alright,"); 
-  display.setFont(liberationSansNarrow_12ptFontInfo); 
-  display.setCursor(16, 16); 
-  display.println("I'm calling"); 
-  display.setCursor(20, 34); 
-  display.println("for help."); 
-  SendMessage("HELP!");
-    while(!display.getButtons(TSButtonLowerRight)){
-    SerialMonitorInterface.print("\nWaiting");
+   while (1) {
+    // flash
+    display.clearWindow(0, 12, 96, 64);
+    display.drawRect(0,12,96,64, TSRectangleFilled, TS_8b_Red);
+    delay(100);
+    display.clearWindow(0, 12, 96, 64);
+
+    //set the font, color and cursor and print message
+    display.setFont(thinPixel7_10ptFontInfo);
+    display.fontColor(TS_8b_White,TS_8b_Black);
+    display.setFont(liberationSansNarrow_12ptFontInfo);
+    display.setCursor(16, 16);
+    display.println("I'm calling");
+    display.setCursor(20, 34);
+    display.println("for help."); 
+    delay(100); 
+    crash++;
+     //send message to friends phone to get friends' help
+   if (crash = 1 ){
+    SendMessage("EMERGENCY!");
+    SendMessage("RIDER CRASHED!");
+    SendMessage("ASSIST RIDER!!!");
+    crash = 1; 
+   }
+    // break upon pressing okay
+    if (display.getButtons(TSButtonLowerLeft)) { 
+      cyclingModeState = 0;
+      crash = 0;
+      break; 
+      display.clearScreen(); 
+      //initHomeScreen();
+    currentDisplayState = displayStateHome;
+    }              
   }
-  display.clearScreen();
   
 }
 
