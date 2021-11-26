@@ -422,7 +422,7 @@ void mainMenu(uint8_t selection) {
         display.print("Cycle mode");
         /// Insertion of Temp Monitoring Code
         double temp = 0;
-        temp = ((accel_sensor.rawTemp * 0.5) + 24.0); // Temperature Reading
+        temp = ((accel_sensor.rawTemp * 0.5) + 22.0); // Temperature Reading
 
         // Message Prompt Condition
         if (temp > 35) {
