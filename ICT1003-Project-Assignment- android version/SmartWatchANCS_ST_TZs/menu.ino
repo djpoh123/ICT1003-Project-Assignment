@@ -5,7 +5,7 @@
 #include "BMA250.h"       // For interfacing with the accel. sensor
 
 // Accelerometer sensor variables for the sensor and its values
-int i=0,z; //i is crash counter, z is direction of screen
+int i = 0, z; //i is crash counter, z is direction of screen
 
 //////////////////////////
 // Bluetooth portion   //
@@ -32,9 +32,9 @@ int i=0,z; //i is crash counter, z is direction of screen
 //TinyScreen display = TinyScreen(TinyScreenDefault);
 
 #if defined(ARDUINO_ARCH_SAMD)
- #define SerialMonitorInterface SerialUSB
+#define SerialMonitorInterface SerialUSB
 #else
- #define SerialMonitorInterface Serial
+#define SerialMonitorInterface Serial
 #endif
 
 
@@ -212,45 +212,45 @@ void showTemp () {
 
   display.clearWindow(0, 12, 96, 64);
 
-  while (1) {
-    accel_sensor.read();//This function gets new data from the acccelerometer
-    temp = ((accel_sensor.rawTemp * 0.5) + 24.0); // Temperature Reading
+  //  while (1) {
+  accel_sensor.read();//This function gets new data from the acccelerometer
+  temp = ((accel_sensor.rawTemp * 0.5) + 24.0); // Temperature Reading
 
-    display.setFont(font10pt);
-    display.fontColor(defaultFontColor, defaultFontBG);
+  display.setFont(font10pt);
+  display.fontColor(defaultFontColor, defaultFontBG);
 
-    display.setCursor(0, menuTextY[0]);
-    display.print(F("< back"));
+  display.setCursor(0, menuTextY[0]);
+  display.print(F("< back"));
 
-    display.setCursor(15, menuTextY[1]);
-    display.print(F("Current Temp"));
+  display.setCursor(15, menuTextY[1]);
+  display.print(F("Current Temp"));
 
-    display.setCursor(30, menuTextY[2]);
-    display.print(temp);
+  display.setCursor(30, menuTextY[2]);
+  display.print(temp);
 
-    // Message Prompt Condition
-    if (temp > 35) {
-      display.setCursor(15, menuTextY[3]);
-      display.print("Please Hydrate!");
-    }
-
-    else {
-      display.setCursor(15, menuTextY[3]);
-      display.print("               ");
-    }
-
-    delay(100);
-
-    // While Loop Exit Condition
-    if (display.getButtons(TSButtonUpperLeft)) {
-      break;
-    }
+  // Message Prompt Condition
+  if (temp > 35) {
+    display.setCursor(15, menuTextY[3]);
+    display.print("Please Hydrate!");
   }
-  currentDisplayState = displayStateHome;
-  initHomeScreen();
+
+  else {
+    display.setCursor(15, menuTextY[3]);
+    display.print("               ");
+  }
+
+  delay(100);
+
+  //    // While Loop Exit Condition
+  //    if (display.getButtons(TSButtonUpperLeft)) {
+  //      break;
+  //    }
+  //  }
+  //  currentDisplayState = displayStateHome;
+  //  initHomeScreen();
 }
 
-void crashDetector(){//////////////////////////////////////////////////////////////////////////////////////////////////////////////////       crash is here
+void crashDetector() { //////////////////////////////////////////////////////////////////////////////////////////////////////////////////       crash is here
   delay(1000);
   accel_sensor.read();//This function gets new data from the acccelerometer
   SerialMonitorInterface.print("\nDetecting for crash:");
@@ -258,137 +258,144 @@ void crashDetector(){///////////////////////////////////////////////////////////
   SerialMonitorInterface.print("    Z =  ");
   SerialMonitorInterface.print(z);
   if (display.getButtons(TSButtonUpperLeft)) {
-      display.clearScreen();
-      cyclingModeState = 0;
-      i = 0;}
-      z = accel_sensor.Z;
+    display.clearScreen();
+    cyclingModeState = 0;
+    i = 0;
+  }
+  z = accel_sensor.Z;
 
-    //Value of z is where the screen is facing, if not facing up properly then add 1 to crash detector(i)
-    if(z < 210){
-      i+=1;
-      if(i==10){
-        //call function asking if rider is ok, if ok return back here, if not ok sound alarm and send notification to phone
-        SerialMonitorInterface.print("\nCRASH DETECTED");
-        display.println("Crash?");
-        display.clearScreen();
-        crashUI();
-       i = 0;
-      }
+  //Value of z is where the screen is facing, if not facing up properly then add 1 to crash detector(i)
+  if (z < 210) {
+    i += 1;
+    if (i == 10) {
+      //call function asking if rider is ok, if ok return back here, if not ok sound alarm and send notification to phone
+      SerialMonitorInterface.print("\nCRASH DETECTED");
+      display.println("Crash?");
+      display.clearScreen();
+      crashUI();
+      i = 0;
     }
-    else{
-     i = 0;
-    }
+  }
+  else {
+    i = 0;
+  }
 }
 
 void crashUI() {
-  display.clearWindow(0, 12, 96, 64);
+  //  display.clearWindow(0, 12, 96, 64);
+  display.clearScreen();
   //start timer loop for 15 seconds
   int i = 15;
   //width from the right for '10'
   int j = 6;
-  unsigned long startTime = millis();  
+  unsigned long startTime = millis();
   while (millis() - startTime < 15000) {
-    // set the font, color and cursor and print question, buttons, time      
+    // set the font, color and cursor and print question, buttons, time
     display.setFont(liberationSansNarrow_12ptFontInfo);
-    display.fontColor(TS_8b_White,TS_8b_Black);
+    display.fontColor(TS_8b_White, TS_8b_Black);
     display.setCursor(0, 16);
     display.println("Are you okay?");
-      
+
     display.setFont(thinPixel7_10ptFontInfo);
-    display.fontColor(TS_8b_Green,TS_8b_Black);
+    display.fontColor(TS_8b_Green, TS_8b_Black);
     display.setCursor(0, 48);
     display.println("Okay");
-    display.fontColor(TS_8b_Red,TS_8b_Black);
+    display.fontColor(TS_8b_Red, TS_8b_Black);
     display.setCursor(72, 48);
     display.println("Help");
 
     display.setFont(liberationSansNarrow_12ptFontInfo);
-    display.fontColor(TS_8b_White,TS_8b_Black);
-    
+    display.fontColor(TS_8b_White, TS_8b_Black);
+
     //set cursor to be based from the right and print width of i
-    display.setCursor(48-j, 32);    
+    display.setCursor(48 - j, 32);
     //print timer
     display.println(i);
 
     delay(1000);
     // one second later or interrupt: break, or clear and decrement
-    if (display.getButtons(TSButtonLowerLeft)) { break; }
+    if (display.getButtons(TSButtonLowerLeft)) {
+      break;
+    }
     else if (display.getButtons(TSButtonLowerRight)) {
       i = 0;
       break;
     }
     else {
-      display.clearWindow(48-j, 32, 12, 12);
+      display.clearWindow(48 - j, 32, 12, 12);
       i -= 1;
       if (i < 10) {
-      j = 0;
+        j = 0;
       }
     }
   }
   //timer run out or interrupt
-  if (i == 0) { crashNotOkay(); }
-  else { crashOkay();}
+  if (i == 0) {
+    crashNotOkay();
+  }
+  else {
+    crashOkay();
+  }
 }
- 
-void crashOkay() { 
-  display.clearScreen(); 
-  //set the font, color and cursor and print question 
-  display.setFont(thinPixel7_10ptFontInfo); 
-  display.fontColor(TS_8b_Red,TS_8b_Black); 
-  display.setCursor(0, 16); 
-  display.println("It's not like I was"); 
-  display.setCursor(0, 30); 
-  display.println("worried about you.."); 
-  delay(2000); 
-  display.clearScreen(); 
-  display.setFont(liberationSansNarrow_16ptFontInfo); 
-  display.setCursor(24, 24); 
-  display.println("BAKA!");
-  delay(2000); 
+
+void crashOkay() {
   display.clearScreen();
-  display.setFont(thinPixel7_10ptFontInfo); 
-  display.fontColor(TS_8b_White,TS_8b_Black);
+  //set the font, color and cursor and print question
+  display.setFont(thinPixel7_10ptFontInfo);
+  display.fontColor(TS_8b_Red, TS_8b_Black);
+  display.setCursor(0, 16);
+  display.println("It's not like I was");
+  display.setCursor(0, 30);
+  display.println("worried about you..");
+  delay(2000);
+  display.clearScreen();
+  display.setFont(liberationSansNarrow_16ptFontInfo);
+  display.setCursor(24, 24);
+  display.println("BAKA!");
+  delay(2000);
+  display.clearScreen();
+  display.setFont(thinPixel7_10ptFontInfo);
+  display.fontColor(TS_8b_White, TS_8b_Black);
   cyclingModeState = 0;
   i = 0;
-} 
- 
-void crashNotOkay() { 
-  display.clearScreen(); 
-   while (1) {
+  display.clearScreen();
+//  initHomeScreen();
+  currentDisplayState = displayStateHome;
+  cyclingModeState = 0;
+}
+
+void crashNotOkay() {
+  display.clearScreen();
+
+  //send message to friends phone to get friends' help
+  SendMessage("EMERGENCY!");
+  SendMessage("RIDER CRASHED!");
+  SendMessage("ASSIST RIDER!!!");
+  crash = 1;
+
+  // break upon pressing okay
+  while (!display.getButtons(TSButtonLowerLeft)) {
     // flash
     display.clearWindow(0, 12, 96, 64);
-    display.drawRect(0,12,96,64, TSRectangleFilled, TS_8b_Red);
+    display.drawRect(0, 12, 96, 64, TSRectangleFilled, TS_8b_Red);
     delay(100);
     display.clearWindow(0, 12, 96, 64);
 
     //set the font, color and cursor and print message
     display.setFont(thinPixel7_10ptFontInfo);
-    display.fontColor(TS_8b_White,TS_8b_Black);
+    display.fontColor(TS_8b_White, TS_8b_Black);
     display.setFont(liberationSansNarrow_12ptFontInfo);
     display.setCursor(16, 16);
     display.println("I'm calling");
     display.setCursor(20, 34);
-    display.println("for help."); 
-    delay(100); 
-    crash++;
-     //send message to friends phone to get friends' help
-   if (crash = 1 ){
-    SendMessage("EMERGENCY!");
-    SendMessage("RIDER CRASHED!");
-    SendMessage("ASSIST RIDER!!!");
-    crash = 1; 
-   }
-    // break upon pressing okay
-    if (display.getButtons(TSButtonLowerLeft)) { 
-      cyclingModeState = 0;
-      crash = 0;
-      break; 
-      display.clearScreen(); 
-      //initHomeScreen();
-    currentDisplayState = displayStateHome;
-    }              
+    display.println("for help.");
+    delay(100);
   }
-  
+  // Break Condition
+  display.clearScreen();
+//  initHomeScreen();
+  currentDisplayState = displayStateHome;
+  cyclingModeState = 0;
 }
 
 void SendMessage(char* data)
@@ -407,14 +414,41 @@ void mainMenu(uint8_t selection) {
     // the intention is set an ok sign
     if (cyclingModeState == 0) {
       cyclingModeState = 1;
-       display.clearScreen(); 
-       while ( cyclingModeState ==1){
-         display.fontColor(defaultFontColor, inactiveFontBG);
-         display.setCursor(16, 16);
-         display.setFont(liberationSansNarrow_12ptFontInfo); 
-         display.print("Cycle mode");
-         crashDetector();
-       }
+      display.clearScreen();
+      while ( cyclingModeState == 1) {
+        display.fontColor(defaultFontColor, inactiveFontBG);
+        display.setCursor(16, 12);
+        display.setFont(liberationSansNarrow_10ptFontInfo);
+        display.print("Cycle mode");
+        /// Insertion of Temp Monitoring Code
+        double temp = 0;
+        temp = ((accel_sensor.rawTemp * 0.5) + 24.0); // Temperature Reading
+
+        display.setFont(font10pt);
+        display.fontColor(defaultFontColor, defaultFontBG);
+
+        //        display.setCursor(0, menuTextY[0]);
+        //        display.print(F("< back"));
+
+        display.setCursor(15, menuTextY[1]);
+        display.print(F("Current Temp"));
+
+        display.setCursor(30, menuTextY[2]);
+        display.print(temp);
+
+        // Message Prompt Condition
+        if (temp > 35) {
+          display.setCursor(15, menuTextY[3]);
+          display.print("Please Hydrate!");
+        }
+
+        else {
+          display.setCursor(15, menuTextY[3]);
+          display.print("               ");
+        }
+        /// Insertion of Temp Monitoring Code
+        crashDetector();
+      }
     }
     else {
       cyclingModeState = 0;
