@@ -212,42 +212,42 @@ void showTemp () {
 
   display.clearWindow(0, 12, 96, 64);
 
-  //  while (1) {
-  accel_sensor.read();//This function gets new data from the acccelerometer
-  temp = ((accel_sensor.rawTemp * 0.5) + 24.0); // Temperature Reading
+  while (1) {
+    accel_sensor.read();//This function gets new data from the acccelerometer
+    temp = ((accel_sensor.rawTemp * 0.5) + 24.0); // Temperature Reading
 
-  display.setFont(font10pt);
-  display.fontColor(defaultFontColor, defaultFontBG);
+    display.setFont(font10pt);
+    display.fontColor(defaultFontColor, defaultFontBG);
 
-  display.setCursor(0, menuTextY[0]);
-  display.print(F("< back"));
+    display.setCursor(0, menuTextY[0]);
+    display.print(F("< back"));
 
-  display.setCursor(15, menuTextY[1]);
-  display.print(F("Current Temp"));
+    display.setCursor(15, menuTextY[1]);
+    display.print(F("Current Temp"));
 
-  display.setCursor(30, menuTextY[2]);
-  display.print(temp);
+    display.setCursor(30, menuTextY[2]);
+    display.print(temp);
 
-  // Message Prompt Condition
-  if (temp > 35) {
-    display.setCursor(15, menuTextY[3]);
-    display.print("Please Hydrate!");
+    // Message Prompt Condition
+    if (temp > 35) {
+      display.setCursor(15, menuTextY[3]);
+      display.print("Please Hydrate!");
+    }
+
+    else {
+      display.setCursor(15, menuTextY[3]);
+      display.print("               ");
+    }
+
+    delay(100);
+
+    // While Loop Exit Condition
+    if (display.getButtons(TSButtonUpperLeft)) {
+      break;
+    }
   }
-
-  else {
-    display.setCursor(15, menuTextY[3]);
-    display.print("               ");
-  }
-
-  delay(100);
-
-  //    // While Loop Exit Condition
-  //    if (display.getButtons(TSButtonUpperLeft)) {
-  //      break;
-  //    }
-  //  }
-  //  currentDisplayState = displayStateHome;
-  //  initHomeScreen();
+  currentDisplayState = displayStateHome;
+  initHomeScreen();
 }
 
 void crashDetector() { //////////////////////////////////////////////////////////////////////////////////////////////////////////////////       crash is here
@@ -359,7 +359,7 @@ void crashOkay() {
   cyclingModeState = 0;
   i = 0;
   display.clearScreen();
-//  initHomeScreen();
+  //  initHomeScreen();
   currentDisplayState = displayStateHome;
   cyclingModeState = 0;
 }
@@ -393,7 +393,7 @@ void crashNotOkay() {
   }
   // Break Condition
   display.clearScreen();
-//  initHomeScreen();
+  //  initHomeScreen();
   currentDisplayState = displayStateHome;
   cyclingModeState = 0;
 }
@@ -424,26 +424,35 @@ void mainMenu(uint8_t selection) {
         double temp = 0;
         temp = ((accel_sensor.rawTemp * 0.5) + 24.0); // Temperature Reading
 
-        display.setFont(font10pt);
-        display.fontColor(defaultFontColor, defaultFontBG);
-
-        //        display.setCursor(0, menuTextY[0]);
-        //        display.print(F("< back"));
-
-        display.setCursor(15, menuTextY[1]);
-        display.print(F("Current Temp"));
-
-        display.setCursor(30, menuTextY[2]);
-        display.print(temp);
-
         // Message Prompt Condition
         if (temp > 35) {
-          display.setCursor(15, menuTextY[3]);
+          display.setFont(font10pt);
+          display.fontColor(TS_8b_Red, defaultFontBG);
+
+          display.setCursor(17, menuTextY[1]);
+          display.print(F("Current Temp"));
+
+          display.setCursor(30, menuTextY[2]);
+          display.print(temp);
+
+          display.setFont(font10pt);
+          display.fontColor(TS_8b_Yellow, defaultFontBG);
+
+          display.setCursor(13, menuTextY[3]);
           display.print("Please Hydrate!");
         }
-
         else {
-          display.setCursor(15, menuTextY[3]);
+          display.setFont(font10pt);
+          display.fontColor(TS_8b_Green, defaultFontBG);
+
+          display.setCursor(17, menuTextY[1]);
+          display.print(F("Current Temp"));
+
+          display.setCursor(30, menuTextY[2]);
+          display.print(temp);
+
+          display.fontColor(defaultFontColor, defaultFontBG);
+          display.setCursor(10, menuTextY[3]);
           display.print("               ");
         }
         /// Insertion of Temp Monitoring Code
